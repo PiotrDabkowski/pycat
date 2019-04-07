@@ -14,11 +14,11 @@ Otherwise prints the image to the terminal by printing colored characters.
 # python3 setup.py sdist upload -r pypi
 setup(
     name='pycat-real',
-    version='0.05',
+    version='0.34',
 
     packages=['pycat'],
     url='https://github.com/PiotrDabkowski/pycat',
-    install_requires = ['PIL', 'numpy', 'six'],
+    install_requires = ['Pillow', 'numpy', 'six'],
     license='MIT',
     author='Piotr Dabkowski',
     author_email='piodrus@gmail.com',
