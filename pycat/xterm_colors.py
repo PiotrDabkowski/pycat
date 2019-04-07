@@ -1,7 +1,8 @@
-import sys
 import numpy as np
-import config
-
+from . import config
+from itertools import chain
+import six
+import logging
 
 XTERM_256_SHORT_TO_RGB = {
     # Primary 3-bit (8 colors). Unique representation!
@@ -270,7 +271,7 @@ XTERM_256_SHORT_TO_RGB = {
 }
 
 _NON_BASE = np.array([
-    XTERM_256_SHORT_TO_RGB[s] for s in (range(16)+range(232,256))
+    XTERM_256_SHORT_TO_RGB[s] for s in chain(range(16), range(232,256))
 ])
 
 
@@ -313,8 +314,8 @@ def get_set_back_color_cmd(rgb):
         code = rgb_to_ascii_code(rgb)
         return u"\033[48;5;%sm" % code
     else:
-        raise NotImplementedError(
-            'Your terminal does not support even ASCII colors (only 8 colors available). Hard to show any images. Get a better one ;)')
+        logging.warning("Your terminal does not support even ASCII colors. Cannot show an image.")
+        return ""
 
 def get_set_front_color_cmd(rgb):
     if rgb is -1:
@@ -325,8 +326,9 @@ def get_set_front_color_cmd(rgb):
         code = rgb_to_ascii_code(rgb)
         return u"\033[38;5;%sm" % code
     else:
-        raise NotImplementedError(
-            'Your terminal does not support even ASCII colors (only 8 colors available). Hard to show any images. Get a better one ;)')
+        logging.warning("Your terminal does not support even ASCII colors. Cannot show an image.")
+        return ""
+
 
 
 def rgb_to_cmd(bottom_rgb, up_rgb=None):
@@ -335,5 +337,5 @@ def rgb_to_cmd(bottom_rgb, up_rgb=None):
     if up_rgb is None:
         cmd = get_set_back_color_cmd(bottom_rgb) + u' '
     else:
-        cmd = get_set_back_color_cmd(up_rgb) + get_set_front_color_cmd(bottom_rgb) + unichr(0x2584)
+        cmd = get_set_back_color_cmd(up_rgb) + get_set_front_color_cmd(bottom_rgb) + six.unichr(0x2584)
     return cmd

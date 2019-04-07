@@ -1,3 +1,3 @@
 __all__ = ['config', 'show']
-import config
-from imcat import show
+from . import config
+from .imcat import show
